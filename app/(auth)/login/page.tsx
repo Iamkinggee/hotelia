@@ -9,9 +9,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, type LoginInput } from "@/lib/validations/auth"
 import { motion } from "framer-motion"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react" // Add this import
 
-export default function AdminLogin() {
+export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
 
   const {
     register,
@@ -22,15 +26,30 @@ export default function AdminLogin() {
   })
 
   const onSubmit = async (data: LoginInput) => {
+    setError("")
     setIsLoading(true)
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    console.log("Login:", data)
-    setIsLoading(false)
+
+    try {
+      const result = await signIn("credentials", {
+        username: data.email, // Use username (not email)
+        password: data.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError("Invalid username or password")
+      } else {
+        router.push("/dashboard")
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-     <div className="md:min-h-[600px] min-h-[500px] p-20 md:px-[200px] rounded-2xl bg-gradient-to-br from-blue-600 via-blue-800 to-blue-900 flex items-center justify-center ">
+    <div className="md:min-h-[600px] min-h-[500px] p-20 md:px-[200px] rounded-2xl bg-gradient-to-br from-blue-600 via-blue-800 to-blue-900 flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -54,11 +73,18 @@ export default function AdminLogin() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
+          {/* Show error message */}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <FormInput
             icon={User}
-            placeholder="USERNAME"
-            error={errors.username?.message}
-            {...register("username")}
+            placeholder="Email"
+            error={errors.email?.message}
+            {...register("email")}
           />
 
           <FormInput
@@ -72,15 +98,13 @@ export default function AdminLogin() {
           <Button
             type="submit"
             disabled={isLoading}
-            // className="w-full h-12 rounded-xl bg-white text-blue-700 hover:bg-white/90 text-lg font-semibold disabled:opacity-70"
-
-             className="w-full h-12 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-600 text-white font-semibold text-lg shadow-lg hover:from-cyan-500 hover:to-cyan-700 disabled:opacity-70"
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-600 text-white font-semibold text-lg shadow-lg hover:from-cyan-500 hover:to-cyan-700 disabled:opacity-70"
           >
             {isLoading ? (
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-5 h-5 border-2 border-blue-700 border-t-transparent rounded-full"
+                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
               />
             ) : (
               "LOGIN"
@@ -96,15 +120,11 @@ export default function AdminLogin() {
             </Link>
           </div>
 
-
-          <div className="text-center text-white/70 text-sm  ">    
-              Don't have an Account? 
-              
-              <Link
-              href="/register"
-          
-             >
-              <span className="text-sm hover:text-white transition pl-3 text-cyan-200">Sign Up
+          <div className="text-center text-white/70 text-sm">
+            Don't have an Account?
+            <Link href="/register">
+              <span className="text-sm hover:text-white transition pl-3 text-cyan-200">
+                Sign Up
               </span>
             </Link>
           </div>
