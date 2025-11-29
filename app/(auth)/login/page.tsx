@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { FormInput } from "@/components/ui/form-input"
-import { User, Lock, ShoppingCart } from "lucide-react"
+import { User, Lock, ShoppingCart, LucideHome } from "lucide-react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -63,7 +63,7 @@ export default function Login() {
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
           className="flex justify-center mb-12"
         >
-          <ShoppingCart className="h-16 w-16 text-white" strokeWidth={1.5} />
+          <LucideHome className="h-16 w-16 text-white" strokeWidth={1.5} />
         </motion.div>
 
         <motion.form
@@ -75,7 +75,7 @@ export default function Login() {
         >
           {/* Show error message */}
           {error && (
-            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-500/10 border border-red-400 text-red-400 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}

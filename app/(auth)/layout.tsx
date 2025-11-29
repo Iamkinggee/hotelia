@@ -21,10 +21,11 @@ export default function AuthLayout({
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-600 via-blue-800 to-blue-900 overflow-hidden">
       {/* This is now a Client Component – safe to use motion */}
-      <AnimatedClouds />
-
+ {/* <AnimatedClouds /> */}
+  <h1 className="text-white tracking-[5px] mt-5 ml-5  text-2xl font-bold">HOTELIA</h1>
       {/* Page content on top */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
+      <div className="relative z-10 flex items-center justify-center pt-5 px-4">
+      
         {children}
       </div>
     </div>
