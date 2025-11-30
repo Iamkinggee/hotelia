@@ -12,6 +12,7 @@
 
 
 // app/(auth)/layout.tsx
+
 import { AnimatedClouds } from "./animated-clouds"
 export default function AuthLayout({
   children,
